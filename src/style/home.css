@@ -341,15 +341,40 @@ body {
 /* Hero Side Image - Desktop Only */
 .hero-side-image {
     position: absolute;
-    left: -100%; /* Start position: completely off-screen */
-    bottom: 0;
-    height: 100%;
+    left: -80%; /* Start position: completely off-screen */
+    bottom: -5%;
+    height: 90%;
     width: auto;
     z-index: 1; /* Behind the text content */
     opacity: 0;
     animation: slideInFromLeft 2s ease-out 0s forwards, 
                slowDrift 20s linear 2s forwards;
     pointer-events: none; /* Prevent interaction */
+    -webkit-mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        black 15%, 
+        black 85%, 
+        transparent 100%);
+    mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        black 15%, 
+        black 85%, 
+        transparent 100%);
+}
+
+/* Alternative: Using ::after for edge blur effect */
+.hero-side-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -50px;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(to right, 
+        transparent, 
+        rgba(0, 0, 0, 0.8) 30%,
+        rgba(0, 0, 0, 1) 100%);
+    pointer-events: none;
 }
 
 @keyframes slideInFromLeft {
@@ -836,7 +861,7 @@ body {
 .celebrity-card.gold-border {
     border: 3px solid transparent;
     background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) padding-box,
-                linear-gradient(45deg, #0f0f0d, #151514, #000000, #191817) border-box;
+                linear-gradient(45deg, #FFD700, #FFA500, #FFD700, #FFA500) border-box;
     animation: goldShimmer 3s ease-in-out infinite;
     position: relative;
     overflow: visible;
@@ -849,23 +874,23 @@ body {
     left: -3px;
     right: -3px;
     bottom: -3px;
-    background: linear-gradient(45deg, #181817, #121111, #1a1919, #000000);
+    background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700, #FFA500);
     border-radius: 50px;
-    border: 5px solid rgb(249, 239, 104);
     opacity: 0.5;
     z-index: -1;
+    filter: blur(10px);
     animation: goldGlow 3s ease-in-out infinite;
 }
 
 @keyframes goldShimmer {
     0%, 100% {
-        background: linear-gradient(rgba(241, 129, 129, 0.331), rgba(255, 255, 255, 0.1)) padding-box,
-                    linear-gradient(45deg, #ffffee4f, #f7eaea80, #f6f0f06b, #ebdfdf7a) border-box;
-    }
-    /* 50% {
         background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) padding-box,
-                    linear-gradient(45deg, #030303, #000000, #0b0b0b, #020202) border-box;
-    } */
+                    linear-gradient(45deg, #FFD700, #FFA500, #FFD700, #FFA500) border-box;
+    }
+    50% {
+        background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) padding-box,
+                    linear-gradient(45deg, #FFA500, #FFD700, #FFA500, #FFD700) border-box;
+    }
 }
 
 @keyframes goldGlow {
@@ -875,7 +900,7 @@ body {
     }
     50% {
         opacity: 0.6;
-        transform: scale(1.01);
+        transform: scale(1.05);
     }
 }
 
@@ -1465,3 +1490,5 @@ body {
         padding: 0.8rem 1.5rem;
     }
 }
+
+

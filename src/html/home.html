@@ -43,7 +43,7 @@
             <div class="hero-background">
                 <div class="hero-overlay"></div>
                 <div class="barber-pole"></div>
-                <img src="goat.png" alt="Team" class="hero-side-image desktop-only">
+                <img src="goat7.png" alt="Team" class="hero-side-image desktop-only">
             </div>
             <div class="hero-content">
                 <div class="logo-hero">
@@ -241,7 +241,7 @@
                                 <option value="coupe-barbe">Coupe + Barbe</option>
                                 <!-- <option value="design">Design & Tracés</option> -->
                                 <option value="enfant">Coupe enfant</option>
-                                <option value="enfant">Autre demande</option>
+                                <option value="autre">Autre demande</option>
                             </select>
                             <input type="datetime-local" v-model="contactForm.datetime" required>
                             <textarea v-model="contactForm.message" placeholder="Précisions (étage, code, préférences...)" rows="3"></textarea>
@@ -341,6 +341,22 @@
                 <img v-if="modalItem.type === 'image'" :src="modalItem.url" alt="Image agrandie">
                 <video v-else :src="modalItem.url" controls autoplay loop></video>
             </div>
+        </div>
+    </div>
+
+
+    <div id="confirmationPopup" class="popup-overlay" v-if="showPopup">
+        <div class="popup-container" :class="popupType">
+            <div class="popup-icon">
+                <i v-if="popupType === 'success'" class="fas fa-check-circle"></i>
+                <i v-else-if="popupType === 'error'" class="fas fa-exclamation-circle"></i>
+                <i v-else class="fas fa-spinner fa-spin"></i>
+            </div>
+            <h3 class="popup-title">{{ popupTitle }}</h3>
+            <p class="popup-message" v-html="popupMessage"></p>
+            <button v-if="popupType !== 'loading'" @click="closePopup" class="popup-close-btn">
+                {{ popupType === 'success' ? 'Parfait !' : 'Fermer' }}
+            </button>
         </div>
     </div>
 

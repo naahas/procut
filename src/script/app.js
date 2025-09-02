@@ -343,7 +343,21 @@ var app = new Vue({
         });
         
         socket.on('contact-response', (response) => {
-            console.log('Contact response:', response);
+            if (response.success) {
+                alert(`✅ Réservation confirmée !\n\nUn email de confirmation a été envoyé à Marvyn.\nIl vous recontactera rapidement.`);
+                
+                // Reset du formulaire seulement si succès
+                this.contactForm = {
+                    name: '',
+                    phone: '',
+                    address: '',
+                    service: '',
+                    datetime: '',
+                    message: ''
+                };
+            } else {
+                alert(`❌ Erreur lors de l'envoi.\n\nVeuillez réessayer ou contacter directement Marvyn au 07 83 06 61 56`);
+            }
         });
         
         // Fermeture du menu mobile au click en dehors
