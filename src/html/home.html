@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2coupe en coupe - Barber Shop by Marvyn</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app" :class="{ 'dark-mode': darkMode }">
+        <!-- Navigation -->
+        <nav class="navbar" :class="{ 'scrolled': scrolled }">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="logo-text">2coupe<span class="red">en</span>coupe</span>
+                    <span class="logo-subtitle">BARBER</span>
+                </div>
+                <div class="nav-menu" :class="{ 'active': mobileMenuOpen }">
+                    <a href="#home" class="nav-link" @click="mobileMenuOpen = false">Accueil</a>
+                    <a href="#services" class="nav-link" @click="mobileMenuOpen = false">Services</a>
+                    <a href="#gallery" class="nav-link" @click="mobileMenuOpen = false">Galerie</a>
+                    <a href="#celebrities" class="nav-link" @click="mobileMenuOpen = false">Célébrités</a>
+                    <a href="#contact" class="nav-link" @click="mobileMenuOpen = false">Contact</a>
+                </div>
+                <!-- Theme Toggle for Desktop Only -->
+                <div class="theme-toggle desktop-only" @click="toggleTheme">
+                    <i class="fas" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
+                </div>
+                <div class="hamburger" @click="mobileMenuOpen = !mobileMenuOpen">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-background">
+                <div class="hero-overlay"></div>
+                <div class="barber-pole"></div>
+                <img src="goat.png" alt="Team" class="hero-side-image desktop-only">
+            </div>
+            <div class="hero-content">
+                <div class="logo-hero">
+                    <h1 class="hero-title">
+                        <span class="title-main">2coupe</span>
+                        <span class="title-red">en</span>
+                        <span class="title-main">coupe</span>
+                    </h1>
+                    <div class="barber-icon">
+                        <i class="fas fa-cut"></i>
+                        <span class="barber-text">BARBER</span>
+                    </div>
+                </div>
+                <p class="hero-subtitle">Marvyn • 7 ans d'expertise • Coiffeur des stars</p>
+                <div class="hero-location">
+                    <i class="fas fa-home"></i>
+                    <span>SERVICE À DOMICILE</span>
+                    <span class="separator">•</span>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>SAVIGNY-LE-TEMPLE & ENVIRONS</span>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">
+                        <i class="fas fa-phone"></i> PRENDRE RDV À DOMICILE
+                    </a>
+                    <a href="#gallery" class="btn btn-secondary">VOIR MON TRAVAIL</a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <h2 class="section-title">
+                    <span>MES</span>
+                    <span class="accent">SERVICES</span>
+                </h2>
+                <div class="home-service-banner">
+                    <div class="banner-content">
+                        <i class="fas fa-car"></i>
+                        <h3>JE ME DÉPLACE CHEZ VOUS !</h3>
+                        <p>Service professionnel dans le confort de votre domicile</p>
+                        <div class="pricing-info">
+                            <div class="price-formula">
+                                <span class="formula-part">Prix coupe</span>
+                                <span class="plus">+</span>
+                                <span class="formula-part highlight">15€ déplacement</span>
+                                <span class="plus">+</span>
+                                <span class="formula-part">Frais zone</span>
+                            </div>
+                        </div>
+                        <div class="service-zones">
+                            <span class="zone-badge free">Savigny-le-Temple <small>(+0€)</small></span>
+                            <span class="zone-badge">Melun <small>(+10€)</small></span>
+                            <span class="zone-badge">Lieusaint <small>(+10€)</small></span>
+                            <span class="zone-badge">Moissy-Cramayel <small>(+10€)</small></span>
+                            <span class="zone-badge">Combs-la-Ville <small>(+10€)</small></span>
+                        </div>
+                        <p class="distance-info">
+                            <i class="fas fa-info-circle"></i>
+                            Déplacement de base : 15€ • Zone éloignée : +10€ supplémentaires
+                        </p>
+                    </div>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card" v-for="service in services" :key="service.id">
+                        <div class="service-icon">
+                            <i :class="service.icon"></i>
+                        </div>
+                        <h3>{{ service.title }}</h3>
+                        <p>{{ service.description }}</p>
+                        <div class="service-price" v-if="service.price">
+                            <span class="price">{{ service.price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="gallery">
+            <div class="container">
+                <h2 class="section-title">
+                    <span>1 COUPE</span>
+                    <span class="accent">1 GAGNANT</span>
+                </h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item" v-for="(item, index) in galleryItems" :key="index" 
+                         @click="item.type === 'image' ? openModal(item) : null">
+                        <img v-if="item.type === 'image'" :src="item.url" :alt="'Coupe ' + (index + 1)">
+                        <video v-else :src="item.url" muted autoplay loop playsinline
+                               class="no-controls"
+                               @click.prevent.stop
+                               @mouseenter="playVideo($event)" 
+                               @mouseleave="playVideo($event)"></video>
+                        <div class="gallery-overlay" v-if="item.type === 'image'">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Celebrities Section -->
+        <section id="celebrities" class="celebrities">
+            <div class="container">
+                <h2 class="section-title">
+                    <span>ILS ME FONT</span>
+                    <span class="accent">CONFIANCE</span>
+                </h2>
+                <!-- VIP Celebrity - Vegedream -->
+                <div class="vip-celebrity">
+                    <div class="celebrity-card gold-border">
+                        <div class="celebrity-info">
+                            <i class="fab fa-instagram"></i>
+                            <a href="https://instagram.com/vegedream" 
+                               target="_blank" class="celebrity-link">
+                                @vegedream
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Regular Celebrities -->
+                <div class="celebrities-slider">
+                    <div class="celebrity-card" v-for="celeb in celebrities" :key="celeb.username">
+                        <div class="celebrity-info">
+                            <i class="fab fa-instagram"></i>
+                            <a :href="'https://instagram.com/' + celeb.username.substring(1)" 
+                               target="_blank" class="celebrity-link">
+                                {{ celeb.username }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <p class="celebrities-text">
+                    Rejoint par des personnalités publiques qui font confiance à mon expertise
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 class="section-title">
+                    <span>RÉSERVER</span>
+                    <span class="accent">À DOMICILE</span>
+                </h2>
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Téléphone</h4>
+                                <a href="tel:0783066156">07 83 06 61 56</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <a href="mailto:Marvynbonheur972@gmail.com">Marvynbonheur972@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Zone d'intervention</h4>
+                                <p>Savigny-le-Temple (77176)</p>
+                                <p class="small">Et communes environnantes</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Disponibilités</h4>
+                                <p>Sur rendez-vous</p>
+                                <p class="small">7j/7 - Horaires flexibles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <h3>Demande de RDV à domicile</h3>
+                        <form @submit.prevent="handleContact">
+                            <input type="text" v-model="contactForm.name" placeholder="Votre nom" required>
+                            <input type="tel" v-model="contactForm.phone" placeholder="Votre téléphone" required>
+                            <input type="text" v-model="contactForm.address" placeholder="Votre adresse" required>
+                            <select v-model="contactForm.service" required>
+                                <option value="">Choisir un service</option>
+                                <option value="coupe">Coupe classique</option>
+                                <!-- <option value="degrade">Dégradé</option> -->
+                                <option value="barbe">Barbe</option>
+                                <option value="coupe-barbe">Coupe + Barbe</option>
+                                <!-- <option value="design">Design & Tracés</option> -->
+                                <option value="enfant">Coupe enfant</option>
+                                <option value="enfant">Autre demande</option>
+                            </select>
+                            <input type="datetime-local" v-model="contactForm.datetime" required>
+                            <textarea v-model="contactForm.message" placeholder="Précisions (étage, code, préférences...)" rows="3"></textarea>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-check"></i> CONFIRMER LE RDV
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Map Section -->
+                <div class="map-section">
+                    <h3>Zone de déplacement</h3>
+                    <div class="pricing-table">
+                        <h4>📍 Tarification complète</h4>
+                        <table class="zone-table">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Prix de base</th>
+                                    <th>+ Déplacement</th>
+                                    <th>+ Zone éloignée</th>
+                                    <th>Total exemple*</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Coupe classique</td>
+                                    <td>20€</td>
+                                    <td rowspan="4" class="highlight">+15€</td>
+                                    <td rowspan="4">0€ (Savigny)<br/>ou +10€</td>
+                                    <td>35€ / 45€</td>
+                                </tr>
+                                <!-- <tr>
+                                    <td>Dégradé</td>
+                                    <td>25€</td>
+                                    <td>40€ / 50€</td>
+                                </tr> -->
+                                <tr>
+                                    <td>Barbe</td>
+                                    <td>15€</td>
+                                    <td>30€ / 40€</td>
+                                </tr>
+                                <tr>
+                                    <td>Coupe + Barbe</td>
+                                    <td>30€</td>
+                                    <td>45€ / 55€</td>
+                                </tr>
+                                <!-- <tr>
+                                    <td>Designs</td>
+                                    <td>30€</td>
+                                    <td>45€ / 55€</td>
+                                </tr> -->
+                                <tr>
+                                    <td>Kids</td>
+                                    <td>15€</td>
+                                    <td>30€ / 40€</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="table-note">*Prix total = Service + 15€ déplacement + frais zone (0€ ou 10€)</p>
+                    </div>
+                    <div id="map" class="map-container"></div>
+                    <p class="map-info">
+                        <i class="fas fa-car"></i> Base : Savigny-le-Temple (77176) • 
+                        Zone proche : +0€ • 
+                        Zone éloignée : +10€
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <span>2coupe<span style="color: var(--primary-red);">en</span>coupe</span>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">BARBER</p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        <!-- <a href="#" class="social-link"><i class="fab fa-facebook"></i></a> -->
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 2coupe en coupe - Marvyn Barber. Tous droits réservés.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Modal -->
+        <div class="modal" v-if="modalItem" @click="closeModal">
+            <div class="modal-content" @click.stop>
+                <span class="modal-close" @click="closeModal">&times;</span>
+                <img v-if="modalItem.type === 'image'" :src="modalItem.url" alt="Image agrandie">
+                <video v-else :src="modalItem.url" controls autoplay loop></video>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <!-- Google Maps API (remplace YOUR_API_KEY par ta clé) -->
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script> -->
+    <script>
+        // Fonction pour initialiser la carte (décommenter si tu as une clé API Google Maps)
+        /*
+        function initMap() {
+            const savigny = { lat: 48.5897, lng: 2.5836 };
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: savigny,
+                styles: [
+                    {
+                        "featureType": "all",
+                        "elementType": "geometry",
+                        "stylers": [{"color": "#f5f5f5"}]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "geometry",
+                        "stylers": [{"color": "#ffffff"}]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "geometry",
+                        "stylers": [{"color": "#c9c9c9"}]
+                    }
+                ]
+            });
+            
+            // Cercle de 10km autour de Savigny-le-Temple
+            const circle = new google.maps.Circle({
+                strokeColor: '#DC143C',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#DC143C',
+                fillOpacity: 0.15,
+                map: map,
+                center: savigny,
+                radius: 10000
+            });
+            
+            const marker = new google.maps.Marker({
+                position: savigny,
+                map: map,
+                title: '2coupe en coupe - Base Savigny-le-Temple'
+            });
+        }
+        */
+    </script>
+</body>
+</html>
